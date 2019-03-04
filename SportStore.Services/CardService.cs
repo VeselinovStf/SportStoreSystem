@@ -8,15 +8,16 @@ namespace SportStore.Services
 {
     public class CardService : ICardService
     {
-        private readonly ICardListRepository _cardRepository;
+        private readonly ICardRepository _cardRepository;
 
-        public CardService(ICardListRepository cardRepository)
+        public CardService(ICardRepository cardRepository)
         {
             this._cardRepository = cardRepository;
         }
 
         public void AddItem(Product product, int quantity)
         {
+            //TODO: Main issue is that Based on my architecture I nead the card ID
             CardLine line = this._cardRepository
                 .CardLines
                 .Where(c => c.ProductID == product.ProductID)
@@ -38,7 +39,7 @@ namespace SportStore.Services
                 line.Quantity += quantity;
             }
 
-            this._cardRepository.SaveChanges();
+           
         }
 
         public void Clear()
@@ -67,7 +68,7 @@ namespace SportStore.Services
                 .FirstOrDefault(p => p.ProductID == product.ProductID);
 
             this._cardRepository.RemoveLine(item);
-            this._cardRepository.SaveChanges();
+          
         }
     }
 }

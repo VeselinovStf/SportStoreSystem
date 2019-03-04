@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SportStore.Repo.Abstract
 {
-    public interface ICardListRepository
+    public interface ICardRepository
     {
         IQueryable<CardLine> CardLines { get; }
 

@@ -1,24 +1,27 @@
-﻿using SportStore.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SportStore.Data;
 using SportStore.Models;
 using SportStore.Repo.Abstract;
 using System.Linq;
 
 namespace SportStore.Repo
 {
-    public class EFCardLineRepository : ICardListRepository
+    public class EFCardRepository : ICardRepository
     {
         private readonly SportStoreDbContext context;
 
-        public EFCardLineRepository(SportStoreDbContext context)
+        public EFCardRepository(SportStoreDbContext context)
         {
             this.context = context;
         }
 
-        public IQueryable<CardLine> CardLines => this.context.CardLine;
+        public IQueryable<CardLine> CardLines => this.context.CardLine.Include(p => p.Product);
 
         public void AddCardLine(CardLine line)
         {
             this.context.CardLine.Add(line);
+
+            this.context.SaveChanges();
         }
 
         public void Clear()
@@ -27,11 +30,15 @@ namespace SportStore.Repo
             {
                 line.IsDeleted = true;
             }
+
+            this.context.SaveChanges();
         }
 
         public void RemoveLine(CardLine line)
         {
             this.context.CardLine.Remove(line);
+
+            this.context.SaveChanges();
         }
 
         public void SaveChanges()

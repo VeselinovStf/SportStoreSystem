@@ -42,7 +42,7 @@ namespace SportStore.Web
         {
             services.AddTransient<IProductRepository, FakeProductsRepository>();
             services.AddTransient<IProductRepository, EFProductRepository>();
-            services.AddTransient<ICardListRepository, EFCardLineRepository>();
+            services.AddTransient<ICardRepository, EFCardRepository>();
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICardService, CardService>();
