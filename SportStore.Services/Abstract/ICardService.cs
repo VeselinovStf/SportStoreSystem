@@ -1,18 +1,19 @@
 ﻿using SportStore.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SportStore.Services.Abstract
 {
     public interface ICardService
     {
-        void AddItem(Product product, int quantity);
+        Task AddItem(Product product, int quantity);
 
-        void RemoveLine(Product product);
+        Task RemoveLine(Product product);
 
-        decimal ComputeTotalValue();
+        Task<decimal> ComputeTotalValue();
 
-        void Clear();
+        Task Clear();
 
-        IEnumerable<CardLine> GetAll();
+        Task<IEnumerable<CardLine>> GetAll();
     }
 }

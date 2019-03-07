@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using SportStore.Data;
 using SportStore.Models;
-using SportStore.Repo.Abstract;
 using SportStore.Services;
 using SportStore.Web.ViewComponents;
 using SportStore.Web.ViewComponents.ViewModels;
@@ -16,72 +17,76 @@ namespace SportStore.Tests.WebTests.ViewComponents
         [Fact]
         public async Task Can_Select_Category_From_Navigation()
         {
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+           .UseInMemoryDatabase(databaseName: "Can_Select_Category_From_Navigation")
+           .Options;
 
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1",Category = "Apples"},
-                         new Product {ProductID = 2, Name = "P2",Category = "Apples"},
-                         new Product {ProductID = 3, Name = "P3",Category = "Plums"},
-                         new Product {ProductID = 4, Name = "P4",Category = "Oranges"}
-                     }
-                )
-                .AsQueryable<Product>());
+            using (var context = new SportStoreDbContext(options))
+            {
+                context.Products.Add(new Product { Id = 1, Name = "P1", Category = "Apples" });
+                context.Products.Add(new Product { Id = 2, Name = "P2", Category = "Apples" });
+                context.Products.Add(new Product { Id = 3, Name = "P3", Category = "Plums" });
+                context.Products.Add(new Product { Id = 4, Name = "P4", Category = "Oranges" });
+              
 
-            var productService = new ProductService(productRepositoryMock.Object);
+                context.SaveChanges();
 
-            NavigationMenuViewComponent target =
-                new NavigationMenuViewComponent(productService);
+                var productService = new ProductService(context);
 
-            var results = (
-                (CategoryViewModel)(await target.InvokeAsync() as ViewViewComponentResult)
-                .ViewData.Model);
+                NavigationMenuViewComponent target =
+                               new NavigationMenuViewComponent(productService);
 
-            Assert.True(Enumerable
-                    .SequenceEqual(
-                        new string[] { "Apples", "Oranges", "Plums" }, results.Categoryes.ToArray()
-                          )
-                        );
+                var results = (
+                    (CategoryViewModel)(await target.InvokeAsync() as ViewViewComponentResult)
+                    .ViewData.Model);
+
+                Assert.True(Enumerable
+                        .SequenceEqual(
+                            new string[] { "Apples", "Oranges", "Plums" }, results.Categoryes.ToArray()
+                              )
+                            );
+            }
+                     
         }
 
         [Fact]
         public async Task Indicate_Selected_Category()
         {
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+          .UseInMemoryDatabase(databaseName: "Indicate_Selected_Category")
+          .Options;
+
             string categorySelected = "Apples";
 
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
-
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1",Category = "Apples"},
-                         new Product {ProductID = 2, Name = "P2",Category = "Oranges"},
-                     }
-                )
-                .AsQueryable<Product>());
-
-            var productService = new ProductService(productRepositoryMock.Object);
-
-            NavigationMenuViewComponent target =
-                new NavigationMenuViewComponent(productService);
-
-            target.ViewComponentContext = new ViewComponentContext
+            using (var context = new SportStoreDbContext(options))
             {
-                ViewContext = new Microsoft.AspNetCore.Mvc.Rendering.ViewContext
+                context.Products.Add(new Product { Id = 1, Name = "P1", Category = "Apples" });
+                context.Products.Add(new Product { Id = 4, Name = "P2", Category = "Oranges" });
+
+
+                context.SaveChanges();
+
+                var productService = new ProductService(context);
+
+                NavigationMenuViewComponent target =
+               new NavigationMenuViewComponent(productService);
+
+                target.ViewComponentContext = new ViewComponentContext
                 {
-                    RouteData = new Microsoft.AspNetCore.Routing.RouteData()
-                }
-            };
+                    ViewContext = new Microsoft.AspNetCore.Mvc.Rendering.ViewContext
+                    {
+                        RouteData = new Microsoft.AspNetCore.Routing.RouteData()
+                    }
+                };
 
-            target.RouteData.Values["category"] = categorySelected;
+                target.RouteData.Values["category"] = categorySelected;
 
-            string result = (string)(await target.InvokeAsync() as ViewViewComponentResult)
-                .ViewData["SelectedCategory"];
+                string result = (string)(await target.InvokeAsync() as ViewViewComponentResult)
+                    .ViewData["SelectedCategory"];
 
-            Assert.Equal(categorySelected, result);
+                Assert.Equal(categorySelected, result);
+            }
+                     
         }
     }
 }

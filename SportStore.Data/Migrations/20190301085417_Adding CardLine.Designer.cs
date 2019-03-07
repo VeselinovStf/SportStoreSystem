@@ -26,13 +26,13 @@ namespace SportStore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ProductID");
+                    b.Property<int>("Id");
 
                     b.Property<int>("Quantity");
 
                     b.HasKey("CardLineID");
 
-                    b.HasIndex("ProductID")
+                    b.HasIndex("Id")
                         .IsUnique();
 
                     b.ToTable("CardLine");
@@ -40,7 +40,7 @@ namespace SportStore.Data.Migrations
 
             modelBuilder.Entity("SportStore.Models.Product", b =>
                 {
-                    b.Property<int>("ProductID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -52,7 +52,7 @@ namespace SportStore.Data.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.HasKey("ProductID");
+                    b.HasKey("Id");
 
                     b.ToTable("Products");
                 });
@@ -61,7 +61,7 @@ namespace SportStore.Data.Migrations
                 {
                     b.HasOne("SportStore.Models.Product", "Product")
                         .WithOne("CardLine")
-                        .HasForeignKey("SportStore.Models.CardLine", "ProductID")
+                        .HasForeignKey("SportStore.Models.CardLine", "Id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

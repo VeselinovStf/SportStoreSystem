@@ -1,38 +1,42 @@
-﻿using SportStore.Models;
-using SportStore.Repo.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using SportStore.Data;
+using SportStore.Models;
 using SportStore.Services.Abstract;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SportStore.Services
 {
     public class CardService : ICardService
     {
-        private readonly ICardRepository _cardRepository;
+        private readonly SportStoreDbContext _cardRepository;
 
-        public CardService(ICardRepository cardRepository)
+        public CardService(SportStoreDbContext cardRepository)
         {
             this._cardRepository = cardRepository;
         }
 
-        public void AddItem(Product product, int quantity)
+        public async Task AddItem(Product product, int quantity)
         {
             //TODO: Main issue is that Based on my architecture I nead the card ID
-            CardLine line = this._cardRepository
-                .CardLines
-                .Where(c => c.ProductID == product.ProductID)
-                .FirstOrDefault();
+            CardLine line = await this._cardRepository
+                .CardLine
+                .Include(p => p.Product)
+                .Where(c => c.Id == product.Id && !c.IsDeleted)
+                .FirstOrDefaultAsync();
 
             if (line == null)
             {
                 var newLine = new CardLine()
                 {
                     Product = product,
-                    ProductID = product.ProductID,
+                    Id = product.Id,
                     Quantity = quantity
                 };
 
-                this._cardRepository.AddCardLine(newLine);
+                this._cardRepository.Add(newLine);
+                await this._cardRepository.SaveChangesAsync();
             }
             else
             {
@@ -42,32 +46,50 @@ namespace SportStore.Services
            
         }
 
-        public void Clear()
+        public async Task Clear()
         {
-            this._cardRepository.Clear();
+            var lines = await this._cardRepository
+                .CardLine
+                .ToListAsync();
+
+            foreach (var line in lines)
+            {
+                line.IsDeleted = true;
+            }
+
+            await this._cardRepository.SaveChangesAsync();
         }
 
-        public decimal ComputeTotalValue()
+        public async Task<decimal> ComputeTotalValue()
         {
-            var cardLine = this._cardRepository.CardLines;
+            var cardLine = await this._cardRepository
+                .CardLine
+                .Where(c => !c.IsDeleted)
+                .ToListAsync();
 
-            var totalValue = cardLine.Sum(p => p.Product.Price * p.Quantity);
+            var totalValue = cardLine
+                .Sum(p => p.Product.Price * p.Quantity);
 
             return totalValue;
         }
 
-        public IEnumerable<CardLine> GetAll()
+        public async Task<IEnumerable<CardLine>> GetAll()
         {
-            return this._cardRepository.CardLines;
+            return await this._cardRepository
+                .CardLine
+                .Where(c => !c.IsDeleted)
+                .ToListAsync();
         }
 
-        public void RemoveLine(Product product)
+        public async Task RemoveLine(Product product)
         {
-            var item = this._cardRepository
-                .CardLines
-                .FirstOrDefault(p => p.ProductID == product.ProductID);
+            var item = await this._cardRepository
+                .CardLine
+                .FirstOrDefaultAsync(p => p.Id == product.Id && !p.IsDeleted);
 
-            this._cardRepository.RemoveLine(item);
+            item.IsDeleted = true;
+
+            await this._cardRepository.SaveChangesAsync();
           
         }
     }

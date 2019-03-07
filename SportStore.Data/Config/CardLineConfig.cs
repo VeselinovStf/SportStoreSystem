@@ -10,7 +10,7 @@ namespace SportStore.Data.Config
         {
             builder.HasOne(c => c.Product)
                 .WithOne(p => p.CardLine)
-                .HasForeignKey<CardLine>(c => c.ProductID);
+                .HasForeignKey<CardLine>(c => c.Id);
         }
     }
 }

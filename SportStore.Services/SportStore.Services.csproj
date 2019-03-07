@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SportStore.Repo\SportStore.Repo.csproj" />
+    <ProjectReference Include="..\SportStore.Data\SportStore.Data.csproj" />
   </ItemGroup>
 
 </Project>

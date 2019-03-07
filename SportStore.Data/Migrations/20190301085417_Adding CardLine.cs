@@ -13,24 +13,24 @@ namespace SportStore.Data.Migrations
                 {
                     CardLineID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ProductID = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CardLine", x => x.CardLineID);
                     table.ForeignKey(
-                        name: "FK_CardLine_Products_ProductID",
-                        column: x => x.ProductID,
+                        name: "FK_CardLine_Products_Id",
+                        column: x => x.Id,
                         principalTable: "Products",
-                        principalColumn: "ProductID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardLine_ProductID",
+                name: "IX_CardLine_Id",
                 table: "CardLine",
-                column: "ProductID",
+                column: "Id",
                 unique: true);
         }
 

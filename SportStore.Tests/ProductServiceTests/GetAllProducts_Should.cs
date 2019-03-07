@@ -1,8 +1,10 @@
-﻿using Moq;
+﻿using Microsoft.EntityFrameworkCore;
+using Moq;
+using SportStore.Data;
 using SportStore.Models;
-using SportStore.Repo.Abstract;
 using SportStore.Services;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace SportStore.Tests.ProductServiceTests
@@ -10,129 +12,136 @@ namespace SportStore.Tests.ProductServiceTests
     public class GetAllProducts_Should
     {
         [Fact]
-        public void Paginate_Correct()
+        public async Task Paginate_Correct()
         {
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+              .UseInMemoryDatabase(databaseName: "Paginate_Correct")
+              .Options;
 
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1"},
-                         new Product {ProductID = 2, Name = "P2"},
-                         new Product {ProductID = 3, Name = "P3"},
-                         new Product {ProductID = 4, Name = "P4"},
-                         new Product {ProductID = 5, Name = "P5"}
-                     }
-                )
-                .AsQueryable<Product>());
+            using (var context = new SportStoreDbContext(options))
+            {
+                context.Products.Add(new Product { Id = 1, Name = "P1" });
+                context.Products.Add(new Product { Id = 2, Name = "P2" });
+                context.Products.Add(new Product { Id = 3, Name = "P3" });
+                context.Products.Add(new Product { Id = 4, Name = "P4" });
+                context.Products.Add(new Product { Id = 5, Name = "P5" });
 
-            var productService = new ProductService(productRepositoryMock.Object);
+                context.SaveChanges();
 
-            productService.PageSize = 3;
+                var productService = new ProductService(context);
 
-            var products = productService.GetAllProducts(null, 2)
-                .Products.ToArray();
+                productService.PageSize = 3;
 
-            Assert.True(products.Length == 2);
-            Assert.Equal("P4", products[0].Name);
-            Assert.Equal("P5", products[1].Name);
+                var productsQuery = await productService.GetAllProducts(null, 2);
+                 var products =    productsQuery.Products.ToArray();
+
+                Assert.True(products.Length == 2);
+                Assert.Equal("P4", products[0].Name);
+                Assert.Equal("P5", products[1].Name);
+            }
         }
 
         [Fact]
-        public void Can_Send_Pagination_View_Model()
+        public async Task Can_Send_Pagination_View_Model()
         {
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+              .UseInMemoryDatabase(databaseName: "Can_Send_Pagination_View_Model")
+              .Options;
 
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1"},
-                         new Product {ProductID = 2, Name = "P2"},
-                         new Product {ProductID = 3, Name = "P3"},
-                         new Product {ProductID = 4, Name = "P4"},
-                         new Product {ProductID = 5, Name = "P5"}
-                     }
-                )
-                .AsQueryable<Product>());
+            using (var context = new SportStoreDbContext(options))
+            {
+                context.Products.Add(new Product { Id = 1, Name = "P1" });
+                context.Products.Add(new Product { Id = 2, Name = "P2" });
+                context.Products.Add(new Product { Id = 3, Name = "P3" });
+                context.Products.Add(new Product { Id = 4, Name = "P4" });
+                context.Products.Add(new Product { Id = 5, Name = "P5" });
 
-            var productService = new ProductService(productRepositoryMock.Object);
+                context.SaveChanges();
 
-            productService.PageSize = 3;
+                var productService = new ProductService(context);
 
-            var resultModel = productService.GetAllProducts(null, 2);
+                productService.PageSize = 3;
 
-            var pageInfo = resultModel.PagingInfo;
+                var resultModel = await productService.GetAllProducts(null, 2);
 
-            Assert.Equal(2, pageInfo.CurrentPage);
-            Assert.Equal(3, pageInfo.ItemsPerPage);
-            Assert.Equal(5, pageInfo.TotalItems);
-            Assert.Equal(2, pageInfo.TotalPages);
+                var pageInfo = resultModel.PagingInfo;
+
+                Assert.Equal(2, pageInfo.CurrentPage);
+                Assert.Equal(3, pageInfo.ItemsPerPage);
+                Assert.Equal(5, pageInfo.TotalItems);
+                Assert.Equal(2, pageInfo.TotalPages);
+
+            }
         }
 
         [Fact]
-        public void Can_By_Category()
+        public async Task Can_By_Category()
         {
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+             .UseInMemoryDatabase(databaseName: "Can_By_Category")
+             .Options;
 
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1", Category="Cat1"},
-                         new Product {ProductID = 2, Name = "P2", Category="Cat2"},
-                         new Product {ProductID = 3, Name = "P3", Category="Cat3"},
-                         new Product {ProductID = 4, Name = "P4", Category="Cat2"},
-                         new Product {ProductID = 5, Name = "P5", Category="Cat5"}
-                     }
-                )
-                .AsQueryable<Product>());
+            using (var context = new SportStoreDbContext(options))
+            {
+                context.Products.Add(new Product { Id = 1, Name = "P1", Category = "Cat1" });
+                context.Products.Add(new Product { Id = 2, Name = "P2", Category = "Cat2" });
+                context.Products.Add(new Product { Id = 3, Name = "P3", Category = "Cat3" });
+                context.Products.Add(new Product { Id = 4, Name = "P4", Category = "Cat2" });
+                context.Products.Add(new Product { Id = 5, Name = "P5", Category = "Cat5" });
 
-            var productService = new ProductService(productRepositoryMock.Object);
+                context.SaveChanges();
 
-            productService.PageSize = 3;
+                var productService = new ProductService(context);
 
-            var resultModel = productService.GetAllProducts("Cat2", 1)
-                .Products
-                .ToArray();
+                productService.PageSize = 3;
+                var resultModelQuery = await productService.GetAllProducts("Cat2", 1);
+                var resultModel = resultModelQuery.Products
+                    .ToArray();
 
-            Assert.Equal(2, resultModel.Length);
-            Assert.True(resultModel[0].Name == "P2" && resultModel[0].Category == "Cat2");
-            Assert.True(resultModel[1].Name == "P4" && resultModel[1].Category == "Cat2");
+                Assert.Equal(2, resultModel.Length);
+                Assert.True(resultModel[0].Name == "P2" && resultModel[0].Category == "Cat2");
+                Assert.True(resultModel[1].Name == "P4" && resultModel[1].Category == "Cat2");
+            }
         }
 
         [Fact]
-        public void Generate_Category_Specific_Product_Count()
+        public async Task Generate_Category_Specific_Product_Count()
         {
-            Mock<IProductRepository> productRepositoryMock = new Mock<IProductRepository>();
+            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
+            .UseInMemoryDatabase(databaseName: "Generate_Category_Specific_Product_Count")
+            .Options;
 
-            productRepositoryMock.Setup(p => p.Products).Returns(
-                (
-                    new Product[]
-                     {
-                         new Product {ProductID = 1, Name = "P1", Category = "Cat1"},
-                         new Product {ProductID = 2, Name = "P2", Category = "Cat2"},
-                         new Product {ProductID = 3, Name = "P3", Category = "Cat1"},
-                         new Product {ProductID = 4, Name = "P4", Category = "Cat2"},
-                         new Product {ProductID = 5, Name = "P5", Category = "Cat3"}
-                     }
-                )
-                .AsQueryable<Product>());
+            using (var context = new SportStoreDbContext(options))
+            {
+                context.Products.Add(new Product {Id = 1, Name = "P1", Category = "Cat1"});
+                context.Products.Add(new Product {Id = 2, Name = "P2", Category = "Cat2"});
+                context.Products.Add(new Product {Id = 3, Name = "P3", Category = "Cat1"});
+                context.Products.Add(new Product {Id = 4, Name = "P4", Category = "Cat2"});
+                context.Products.Add(new Product { Id = 5, Name = "P5", Category = "Cat3" });
 
-            var productService = new ProductService(productRepositoryMock.Object);
+                context.SaveChanges();
 
-            productService.PageSize = 5;
+                var productService = new ProductService(context);
 
-            int? res1 = productService.GetAllProducts("Cat1").Products.Count();
-            int? res2 = productService.GetAllProducts("Cat2").Products.Count();
-            int? res3 = productService.GetAllProducts("Cat3").Products.Count();
-            int? resAll = productService.GetAllProducts(null).Products.Count();
+         
+                productService.PageSize = 5;
 
-            Assert.Equal(2, res1);
-            Assert.Equal(2, res2);
-            Assert.Equal(1, res3);
-            Assert.Equal(5, resAll);
+                var res1Query = await productService.GetAllProducts("Cat1");
+                var res2Query = await productService.GetAllProducts("Cat2");
+                var res3Query = await productService.GetAllProducts("Cat3");
+                var resAllQuery = await productService.GetAllProducts(null);
+
+                int? res1 = res1Query.Products.Count();
+                int? res2 = res2Query.Products.Count();
+                int? res3 = res3Query.Products.Count();
+                int? resAll = resAllQuery.Products.Count();
+
+                Assert.Equal(2, res1);
+                Assert.Equal(2, res2);
+                Assert.Equal(1, res3);
+                Assert.Equal(5, resAll);
+            }
+           
         }
     }
 }

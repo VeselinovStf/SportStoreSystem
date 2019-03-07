@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SportStore.Data;
-using SportStore.Repo;
-using SportStore.Repo.Abstract;
+
 using SportStore.Services;
 using SportStore.Services.Abstract;
 
@@ -40,9 +39,7 @@ namespace SportStore.Web
 
         private void ConfigureServicesRegistration(IServiceCollection services)
         {
-            services.AddTransient<IProductRepository, FakeProductsRepository>();
-            services.AddTransient<IProductRepository, EFProductRepository>();
-            services.AddTransient<ICardRepository, EFCardRepository>();
+            
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICardService, CardService>();

@@ -1,32 +1,34 @@
-﻿using SportStore.Repo.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using SportStore.Data;
 using SportStore.Services.Abstract;
 using SportStore.Services.DTOs;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SportStore.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly SportStoreDbContext _productRepository;
 
         public int PageSize = 4;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(SportStoreDbContext productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public ProductsListDTO GetAllProducts(string category, int productPage = 1)
+        public async Task<ProductsListDTO> GetAllProducts(string category, int productPage = 1)
         {
             var repoQuery =
-                this._productRepository
+                await this._productRepository
                 .Products
                 .Where(c => category == null || c.Category == category)
-                .OrderBy(p => p.ProductID)
+                .OrderBy(p => p.Id)
                 .Skip((productPage - 1) * PageSize)
                 .Take(PageSize)
-                .ToList();
+                .ToListAsync();
 
             var serviceModel = new ProductsListDTO()
             {
@@ -36,19 +38,19 @@ namespace SportStore.Services
                     Description = q.Description,
                     Name = q.Name,
                     Price = q.Price,
-                    ProductID = q.ProductID
+                    Id = q.Id
                 }),
                 PagingInfo = new PagingInfoDTO()
                 {
                     TotalItems = category == null ?
-                        this._productRepository
+                        await this._productRepository
                         .Products
-                        .Count()
+                        .CountAsync()
                         :
-                        this._productRepository
+                        await this._productRepository
                         .Products
                         .Where(pc => pc.Category == category)
-                        .Count(),
+                        .CountAsync(),
                     CurrentPage = productPage,
                     ItemsPerPage = this.PageSize
                 },
@@ -58,14 +60,14 @@ namespace SportStore.Services
             return serviceModel;
         }
 
-        public CategoryesDTO GetCategoryNames()
+        public async Task<CategoryesDTO> GetCategoryNames()
         {
-            var repoQuery = this._productRepository
+            var repoQuery = await this._productRepository
                 .Products
                 .Select(p => p.Category)
                 .Distinct()
                 .OrderBy(p => p)
-                .ToList();
+                .ToListAsync();
 
             var serviceModel = new CategoryesDTO()
             {

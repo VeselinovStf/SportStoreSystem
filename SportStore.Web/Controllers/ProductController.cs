@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SportStore.Services.Abstract;
 using SportStore.Web.ViewModels;
+using System.Threading.Tasks;
 
 namespace SportStore.Web.Controllers
 {
@@ -13,9 +14,9 @@ namespace SportStore.Web.Controllers
             this._productService = _productService;
         }
 
-        public ViewResult List(string category, int productPage = 1)
+        public async Task<ViewResult> List(string category, int productPage = 1)
         {
-            var serviceModel = this._productService.GetAllProducts(category, productPage);
+            var serviceModel = await this._productService.GetAllProducts(category, productPage);
 
             var model = new ProductsListViewModel(serviceModel);
 

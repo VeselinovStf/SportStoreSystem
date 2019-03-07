@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SportStore.Data.Config;
 using SportStore.Models;
 
@@ -21,6 +23,11 @@ namespace SportStore.Data
             modelBuilder.ApplyConfiguration(new CardConfig());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

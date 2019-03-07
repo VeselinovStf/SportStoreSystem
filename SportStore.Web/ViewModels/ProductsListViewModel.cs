@@ -14,7 +14,7 @@ namespace SportStore.Web.ViewModels
                 Description = dto.Description,
                 Name = dto.Name,
                 Price = dto.Price,
-                ProductID = dto.ProductID
+                Id = dto.Id
             });
 
             this.PagingInfo = new PagingInfo()

@@ -9,11 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStore.Tests", "SportSt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStore.Models", "SportStore.Models\SportStore.Models.csproj", "{88A50182-CAD0-4752-BF2A-8A6C2073F32A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStore.Repo", "SportStore.Repo\SportStore.Repo.csproj", "{8891C32E-85EE-486B-A4EA-E58E98F5A4A9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStore.Data", "SportStore.Data\SportStore.Data.csproj", "{78F90FD3-8F0B-43D3-B988-3A82D65FC8F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportStore.Services", "SportStore.Services\SportStore.Services.csproj", "{891EF614-D7C9-44B8-9E04-276AB9F9B409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStore.Services", "SportStore.Services\SportStore.Services.csproj", "{891EF614-D7C9-44B8-9E04-276AB9F9B409}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{88A50182-CAD0-4752-BF2A-8A6C2073F32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88A50182-CAD0-4752-BF2A-8A6C2073F32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88A50182-CAD0-4752-BF2A-8A6C2073F32A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8891C32E-85EE-486B-A4EA-E58E98F5A4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8891C32E-85EE-486B-A4EA-E58E98F5A4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8891C32E-85EE-486B-A4EA-E58E98F5A4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8891C32E-85EE-486B-A4EA-E58E98F5A4A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{78F90FD3-8F0B-43D3-B988-3A82D65FC8F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{78F90FD3-8F0B-43D3-B988-3A82D65FC8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F90FD3-8F0B-43D3-B988-3A82D65FC8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU

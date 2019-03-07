@@ -16,7 +16,7 @@ namespace SportStore.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categoryes = this._productService.GetCategoryNames();
+            var categoryes = await this._productService.GetCategoryNames();
 
             var model = new CategoryViewModel(categoryes);
             ViewBag.SelectedCategory = RouteData?.Values["category"];

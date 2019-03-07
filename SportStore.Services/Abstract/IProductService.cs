@@ -1,11 +1,12 @@
 ﻿using SportStore.Services.DTOs;
+using System.Threading.Tasks;
 
 namespace SportStore.Services.Abstract
 {
     public interface IProductService
     {
-        ProductsListDTO GetAllProducts(string category, int productPage = 1);
+        Task<ProductsListDTO> GetAllProducts(string category, int productPage = 1);
 
-        CategoryesDTO GetCategoryNames();
+        Task<CategoryesDTO> GetCategoryNames();
     }
 }
