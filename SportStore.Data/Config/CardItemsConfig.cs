@@ -11,6 +11,10 @@ namespace SportStore.Data.Config
             builder.HasOne(c => c.Product)
                 .WithOne(p => p.CardLine)
                 .HasForeignKey<CardItem>(c => c.Id);
+
+            builder.Property(p => p.Quantity)
+                .HasColumnType("int")             
+                .IsRequired();
         }
     }
 }

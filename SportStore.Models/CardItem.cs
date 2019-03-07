@@ -2,7 +2,7 @@
 {
     public class CardItem : Entity
     {   
-        public int Id { get; set; }
+      
 
         public Product Product { get; set; }
 

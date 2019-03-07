@@ -21,6 +21,7 @@ namespace SportStore.Data
         {
             modelBuilder.ApplyConfiguration(new CardItemsConfig());
             modelBuilder.ApplyConfiguration(new CardConfig());
+            modelBuilder.ApplyConfiguration(new ProductConfig());
 
             base.OnModelCreating(modelBuilder);
         }
