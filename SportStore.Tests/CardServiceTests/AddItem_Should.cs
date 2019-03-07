@@ -35,7 +35,7 @@ namespace SportStore.Tests.CardServiceTests
                 await service.AddItem(p1, 1);
                 await service.AddItem(p2, 1);
 
-                var result = context.CardLine.ToArray();
+                var result = context.CardItems.ToArray();
 
                 Assert.Equal(2, result.Length);
                 Assert.Equal(p1, result[0].Product);
@@ -54,19 +54,16 @@ namespace SportStore.Tests.CardServiceTests
             Product p1 = new Product { Id = 1, Name = "P1" };
             Product p2 = new Product { Id = 2, Name = "P2" };
 
-
-
             using (var context = new SportStoreDbContext(options))
             {
                
-
                 var service = new CardService(context);
 
                await service.AddItem(p1, 1);
                await service.AddItem(p2, 1);
                await service.AddItem(p1, 10);
 
-                var result = context.CardLine.ToArray();
+                var result = context.CardItems.ToArray();
 
                 Assert.Equal(2, result.Length);
                 Assert.Equal(11, result[0].Quantity);
@@ -74,50 +71,6 @@ namespace SportStore.Tests.CardServiceTests
             }
         }
 
-        [Fact]
-        public async Task Can_Remove_Line()
-        {
-            var options = new DbContextOptionsBuilder<SportStoreDbContext>()
-               .UseInMemoryDatabase(databaseName: "Can_Remove_Line")
-               .Options;
-
-            Product p1 = new Product { Id = 1, Name = "P1" };
-            Product p2 = new Product { Id = 2, Name = "P2" };
-
-
-
-            using (var context = new SportStoreDbContext(options))
-            {
-               
-
-                var newLine1 = new CardLine()
-                {
-                    Product = p1,
-                    Id = p1.Id,
-                    Quantity = 1
-                };
-
-                var newLine2 = new CardLine()
-                {
-                    Product = p2,
-                    Id = p2.Id,
-                    Quantity = 2
-                };
-
-                context.CardLine.Add(newLine1);
-                context.CardLine.Add(newLine2);
-
-               await  context.SaveChangesAsync();
-
-                var service = new CardService(context);
-
-                await service.RemoveLine(p2);
-
-                var result = context.CardLine.ToArray();
-
-                Assert.Single(result.Where(c => c.Product == p2 && c.IsDeleted));
-                Assert.Single(result.Where(c => c.Product == p1 && !c.IsDeleted));
-            }
-        }
+        
     }
 }

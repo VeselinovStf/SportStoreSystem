@@ -11,7 +11,7 @@ namespace SportStore.Data.Config
     {
         public void Configure(EntityTypeBuilder<Card> builder)
         {
-            builder.HasMany(c => c.CardLines)
+            builder.HasMany(c => c.CardItems)
                 .WithOne(cl => cl.Card)
                 .HasForeignKey(cl => cl.Card_Id);
         }

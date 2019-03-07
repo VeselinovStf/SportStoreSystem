@@ -6,14 +6,15 @@ namespace SportStore.Services.Abstract
 {
     public interface ICardService
     {
+        //Task CreateCard(int userId);
         Task AddItem(Product product, int quantity);
 
-        Task RemoveLine(Product product);
+        Task RemoveItem(Product product);
 
         Task<decimal> ComputeTotalValue();
 
         Task Clear();
 
-        Task<IEnumerable<CardLine>> GetAll();
+        Task<IEnumerable<CardItem>> GetAll();
     }
 }

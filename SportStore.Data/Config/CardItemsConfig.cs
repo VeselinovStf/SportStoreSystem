@@ -4,13 +4,13 @@ using SportStore.Models;
 
 namespace SportStore.Data.Config
 {
-    public class CardLineConfig : IEntityTypeConfiguration<CardLine>
+    public class CardItemsConfig : IEntityTypeConfiguration<CardItem>
     {
-        public void Configure(EntityTypeBuilder<CardLine> builder)
+        public void Configure(EntityTypeBuilder<CardItem> builder)
         {
             builder.HasOne(c => c.Product)
                 .WithOne(p => p.CardLine)
-                .HasForeignKey<CardLine>(c => c.Id);
+                .HasForeignKey<CardItem>(c => c.Id);
         }
     }
 }

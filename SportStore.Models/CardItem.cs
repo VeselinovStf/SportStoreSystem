@@ -1,8 +1,7 @@
 ﻿namespace SportStore.Models
 {
-    public class CardLine : Entity
-    {
-    
+    public class CardItem : Entity
+    {   
         public int Id { get; set; }
 
         public Product Product { get; set; }

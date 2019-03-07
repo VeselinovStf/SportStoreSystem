@@ -20,15 +20,15 @@ namespace SportStore.Services
         public async Task AddItem(Product product, int quantity)
         {
             //TODO: Main issue is that Based on my architecture I nead the card ID
-            CardLine line = await this._cardRepository
-                .CardLine
+            CardItem line = await this._cardRepository
+                .CardItems
                 .Include(p => p.Product)
                 .Where(c => c.Id == product.Id && !c.IsDeleted)
                 .FirstOrDefaultAsync();
 
             if (line == null)
             {
-                var newLine = new CardLine()
+                var newLine = new CardItem()
                 {
                     Product = product,
                     Id = product.Id,
@@ -49,7 +49,7 @@ namespace SportStore.Services
         public async Task Clear()
         {
             var lines = await this._cardRepository
-                .CardLine
+                .CardItems
                 .ToListAsync();
 
             foreach (var line in lines)
@@ -63,7 +63,7 @@ namespace SportStore.Services
         public async Task<decimal> ComputeTotalValue()
         {
             var cardLine = await this._cardRepository
-                .CardLine
+                .CardItems
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
@@ -73,18 +73,18 @@ namespace SportStore.Services
             return totalValue;
         }
 
-        public async Task<IEnumerable<CardLine>> GetAll()
+        public async Task<IEnumerable<CardItem>> GetAll()
         {
             return await this._cardRepository
-                .CardLine
+                .CardItems
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
         }
 
-        public async Task RemoveLine(Product product)
+        public async Task RemoveItem(Product product)
         {
             var item = await this._cardRepository
-                .CardLine
+                .CardItems
                 .FirstOrDefaultAsync(p => p.Id == product.Id && !p.IsDeleted);
 
             item.IsDeleted = true;

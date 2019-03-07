@@ -8,9 +8,9 @@ namespace SportStore.Models
     {
         public Card()
         {
-            this.CardLines = new HashSet<CardLine>();
+            this.CardItems = new HashSet<CardItem>();
         }     
 
-        public ICollection<CardLine> CardLines { get; set; }
+        public ICollection<CardItem> CardItems { get; set; }
     }
 }
