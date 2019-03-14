@@ -7,6 +7,7 @@ namespace SportStore.Services.Abstract
     public interface ICardService
     {
         //Task CreateCard(int userId);
+        
         Task AddItem(Product product, int quantity);
 
         Task RemoveItem(Product product);

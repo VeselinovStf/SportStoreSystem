@@ -17,7 +17,7 @@ namespace SportStore.Services
             this._cardRepository = cardRepository;
         }
 
-        public async Task AddItem(Product product, int quantity)
+        public async Task AddItem(Product product, int quantity = 1)
         {
             //TODO: Main issue is that Based on my architecture I nead the card ID
             CardItem line = await this._cardRepository

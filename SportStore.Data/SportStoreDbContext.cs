@@ -15,7 +15,7 @@ namespace SportStore.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<CardItem> CardItems { get; set; }
-        public DbSet<Card> Cards { get; set; }
+        public DbSet<Cart> Cards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportStore.Data;
+using SportStore.Models;
 using SportStore.Services.Abstract;
 using SportStore.Services.DTOs;
 using System.Collections.Generic;
@@ -75,6 +76,24 @@ namespace SportStore.Services
             };
 
             return serviceModel;
+        }
+
+        public async Task<Product> GetProductById(int productId)
+        {
+            var repoQuery = await this._productRepository
+                .Products
+                .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+
+            //var serviceDto = new ProductDTO()
+            //{
+            //    Id = repoQuery.Id,
+            //    Category = repoQuery.Category,
+            //    Description = repoQuery.Description,
+            //    Name = repoQuery.Name,
+            //    Price = repoQuery.Price
+            //};
+
+            return repoQuery;
         }
     }
 }

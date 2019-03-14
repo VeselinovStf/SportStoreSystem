@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +9,8 @@ using SportStore.Data;
 
 using SportStore.Services;
 using SportStore.Services.Abstract;
+using SportStore.SessionService;
+using SportStore.SessionService.Abstract;
 
 namespace SportStore.Web
 {
@@ -24,6 +28,20 @@ namespace SportStore.Web
             ConfigureDbService(services);
             ConfigureServicesRegistration(services);
             ConfigureMVCServices(services);
+            ConfigureSessionService(services);
+        }
+
+        private void ConfigureSessionService(IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.Cookie.Name = ".Cart.Session";
+
+                options.IdleTimeout = TimeSpan.FromSeconds(5);
+                
+            });
         }
 
         private void ConfigureDbService(IServiceCollection services)
@@ -43,6 +61,8 @@ namespace SportStore.Web
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICardService, CardService>();
+            services.AddTransient<ICardSessionService, CardSessionService>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         private void ConfigureMVCServices(IServiceCollection services)
@@ -59,6 +79,7 @@ namespace SportStore.Web
             }
 
             app.UseStaticFiles();
+            app.UseSession();
 
             ConfigureMvcRoutes(app);
             DataSeeding(app);

@@ -4,9 +4,17 @@
     <div class="bg-faded p-1">
         <h4>
             @Model.Name<span class="badge badge-pill badge-primary" style="float:right">
-            <small>@Model.Price.ToString("c")</small>
-        </span>
-    </h4>
-</div>
-<div class="card-text p-1">@Model.Description</div>
+                <small>@Model.Price.ToString("c")</small>
+            </span>
+        </h4>
+    </div>
+    <div class="card-text p-1">@Model.Description</div>
+    <form  asp-route-productId="@Model.Id" asp-action="AddToCart" asp-controller="Cart" method="post">
+        <input type="hidden" asp-for="Id" />       
+        <input type="hidden" 
+           name="returnUrl" 
+           value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+    
+        <button type="submit" class="btn btn-success btn-sm pull-right" style="float:right">Add To Cart            </button>            
+    </form>
 </div>

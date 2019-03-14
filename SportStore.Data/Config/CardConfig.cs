@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SportStore.Data.Config
 {
-    public class CardConfig : IEntityTypeConfiguration<Card>
+    public class CardConfig : IEntityTypeConfiguration<Cart>
     {
-        public void Configure(EntityTypeBuilder<Card> builder)
+        public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.HasMany(c => c.CardItems)
                 .WithOne(cl => cl.Card)

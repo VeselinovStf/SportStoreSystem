@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SportStore.Models
 {
-    public class Card : Entity
+    public class Cart : Entity
     {
-        public Card()
+        public Cart()
         {
             this.CardItems = new HashSet<CardItem>();
         }     

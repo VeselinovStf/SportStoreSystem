@@ -10,6 +10,6 @@
 
         public int Card_Id { get; set; }
 
-        public Card Card { get; set; }
+        public Cart Card { get; set; }
     }
 }

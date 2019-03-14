@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SportStore.Models\SportStore.Models.csproj" />
     <ProjectReference Include="..\SportStore.Services\SportStore.Services.csproj" />
+    <ProjectReference Include="..\SportStore.SessionService\SportStore.SessionService.csproj" />
   </ItemGroup>
 
 </Project>
